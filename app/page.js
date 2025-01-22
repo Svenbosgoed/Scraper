@@ -3,8 +3,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [websiteTitle, setWebsiteTitle] = useState(null);
-  const [products, setProducts] = useState(null);
+  const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState(new Set());
 
@@ -12,8 +11,7 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    setProducts(null);
-    setWebsiteTitle(null);
+    setProducts([]);
     
     const url = e.target.elements[0].value;
     
@@ -29,7 +27,6 @@ export default function Home() {
       if (!response.ok) throw new Error('Failed to fetch products');
       
       const data = await response.json();
-      setWebsiteTitle(data.websiteTitle);
       setProducts(data.products);
     } catch (err) {
       setError(err.message);
@@ -85,22 +82,14 @@ export default function Home() {
           </div>
         )}
 
-        {websiteTitle && (
-          <div className="max-w-2xl mx-auto mb-8">
-            <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white">
-              {websiteTitle}
-            </h2>
-          </div>
-        )}
-
-        {products && products.length > 0 && (
+        {products.length > 0 && (
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                 Found {products.length} Products
               </h2>
               <button
-                onClick={() => {/* Handle export */}}
+                onClick={() => {/* Handle export of selected products */}}
                 disabled={selectedProducts.size === 0}
                 className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg
                          transition-colors duration-200 disabled:opacity-50"
